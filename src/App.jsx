@@ -70,7 +70,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -80,6 +80,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -103,6 +104,17 @@ const CreateNew = (props) => {
     </div>
   )
 
+}
+
+const Notification = ({message})=>{
+  if(message===null){
+    return
+  }
+  return(
+    <div>
+      {message}
+    </div>
+  )
 }
 
 const App = () => {
@@ -130,6 +142,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new note ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000);   
   }
 
   const anecdoteById = (id) =>
@@ -157,7 +173,8 @@ const App = () => {
         <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote}></Anecdote>}></Route>
         <Route path='/create' element={<CreateNew addNew={addNew} />}></Route>
         <Route path='/about'  element={<About />}></Route>
-      </Routes>      
+      </Routes> 
+      <Notification message={notification} />     
       <Footer />
     </div>
   )
